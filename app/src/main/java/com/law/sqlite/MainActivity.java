@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     DatabaseHelper myDb;
-    EditText editName, editSurname, editMarks;
-    Button btnAdd, btnViewAll;
+    EditText editName, editSurname, editMarks, editId;
+    Button btnAdd, btnViewAll, btnUpdate, btnDel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,10 +22,15 @@ public class MainActivity extends AppCompatActivity {
         editName = (EditText) findViewById(R.id.editTextName);
         editSurname = (EditText) findViewById(R.id.editTextSurname);
         editMarks = (EditText) findViewById(R.id.editTextMarks);
+        editId = (EditText)findViewById(R.id.editTextId);
         btnAdd = (Button) findViewById(R.id.buttonAdd);
         btnViewAll = (Button) findViewById(R.id.buttonShow);
+        btnUpdate = (Button) findViewById(R.id.buttonUpdate);
+        btnDel = (Button) findViewById(R.id.btnDel);
         addData();
         viewAll();
+        updateData();
+        deleteData();
 
     }
 
@@ -38,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                             editSurname.getText().toString(),
                             editMarks.getText().toString());
 
-                    if(isInserted = true)
+                    if(isInserted == true)
                         Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_SHORT).show();
                     else
                         Toast.makeText(MainActivity.this, "Data not inserted", Toast.LENGTH_SHORT).show();
@@ -81,5 +86,41 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle(title);
         builder.setMessage(Message);
         builder.show();
+    }
+
+    public void updateData(){
+        btnUpdate.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       boolean isUpdated = myDb.updateData(editId.getText().toString(),
+                               editName.getText().toString(),
+                               editSurname.getText().toString(),
+                               editMarks.getText().toString());
+
+                        if(isUpdated == true)
+                            Toast.makeText(MainActivity.this, "Data updated successfully", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Data update failed", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+        );
+    }
+
+    public void deleteData(){
+        btnDel.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Integer deletedRows = myDb.deleteData(editId.getText().toString());
+
+                        if(deletedRows > 0)
+                            Toast.makeText(MainActivity.this, "Data deleted successfully", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Data delete failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 }
